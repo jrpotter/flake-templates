@@ -1,0 +1,25 @@
+# direnv
+*.sw?
+.direnv
+.gopath
+/direnv
+/direnv.test
+/dist
+/test/config
+/test/data
+/test/scenarios/inherited/.envrc
+
+# elixir
+/_build
+/cover
+/deps
+/doc
+/.fetch
+/tmp/
+erl_crash.dump
+*.ez
+*.beam
+/config/*.secret.exs
+.elixir_ls/
+# Ignore package tarball (built via "mix hex.build").
+hello_world-*.tar

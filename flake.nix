@@ -3,6 +3,10 @@
 
   outputs = { self, ... }: {
     templates = {
+      elixir = {
+        path = ./elixir;
+        description = "A minimal Elixir flake";
+      };
       haskell = {
         path = ./haskell;
         description = "A minimal Haskell flake";

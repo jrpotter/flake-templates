@@ -1,0 +1,24 @@
+# direnv
+*.sw?
+.direnv
+.gopath
+/direnv
+/direnv.test
+/dist
+/test/config
+/test/data
+/test/scenarios/inherited/.envrc
+
+# rubygem
+*.gem
+
+# npm dependencies
+node_modules
+package-lock.json
+
+# jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+vendor/

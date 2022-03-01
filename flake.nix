@@ -7,6 +7,10 @@
         path = ./haskell;
         description = "A minimal Haskell flake";
       };
+      jekyll = {
+        path = ./jekyll;
+        description = "A minimal Jekyll flake";
+      };
       maven = {
         path = ./maven;
         description = "A minimal Maven flake";

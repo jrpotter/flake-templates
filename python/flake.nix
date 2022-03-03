@@ -10,24 +10,24 @@
     poetry2nix.url = "github:nix-community/poetry2nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix }: {
+    overlay = nixpkgs.lib.composeManyExtensions [
+      poetry2nix.overlay
+      (final: prev: {
+        hello-world = prev.poetry2nix.mkPoetryApplication {
+          projectDir = ./hello-world;
+          python = prev.python38;
+        };
+      })
+    ];
+  } // (flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgsForSystem = system: import nixpkgs {
+      pkgs = import nixpkgs {
         inherit system;
-        overlays = [ localOverlay ];
+        overlays = [ self.overlay ];
       };
-
-      localOverlay = nixpkgs.lib.composeManyExtensions [
-        poetry2nix.overlay
-        (final: prev: {
-          hello-world = prev.poetry2nix.mkPoetryApplication {
-            projectDir = ./hello-world;
-            python = prev.python38;
-          };
-        })
-      ];
     in
-    flake-utils.lib.eachDefaultSystem (system: with (pkgsForSystem system); {
+    with pkgs; {
       packages = { inherit hello-world; };
 
       defaultPackage = self.packages.${system}.hello-world;
@@ -39,5 +39,5 @@
           python38
         ];
       };
-    }) // { overlay = localOverlay; };
+    }));
 }

@@ -9,44 +9,42 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils }: {
+    overlay = final: prev: {
+      hello-world = prev.haskellPackages.callCabal2nix "hello-world" self { };
+    };
+  } // (flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgsForSystem = system: import nixpkgs {
+      pkgs = import nixpkgs {
         inherit system;
-        overlays = [ localOverlay ];
+        overlays = [ self.overlay ];
       };
 
-      localOverlay = final: prev: {
-        hello-world = prev.haskellPackages.callCabal2nix "hello-world" self { };
+      haskell = {
+        ghc = pkgs.haskellPackages.ghc;
+        hls = pkgs.haskell-language-server.override {
+          supportedGhcVersions = [ "8107" ];
+        };
       };
     in
-    flake-utils.lib.eachDefaultSystem
-      (system: with (pkgsForSystem system);
-        let
-          haskell = {
-            ghc = haskellPackages.ghc;
-            hls = haskell-language-server.override {
-              supportedGhcVersions = [ "8107" ];
-            };
-          };
-        in {
-          packages = { inherit hello-world; };
+    with pkgs; {
+      packages = { inherit hello-world; };
 
-          defaultPackage = self.packages.${system}.hello-world;
+      defaultPackage = self.packages.${system}.hello-world;
 
-          devShell = mkShell {
-            buildInputs = lib.attrValues self.packages.${system} ++ [
-              haskell.ghc
-              haskell.hls
-              gdb
-              # GHC depends on LANG so need this package to properly interpret our
-              # files with e.g. tasty-discover.
-              # https://www.reddit.com/r/Nix/comments/jyczts/nixshell_locale_issue/
-              glibcLocales
-              haskellPackages.cabal-install
-              haskellPackages.ormolu
-              haskellPackages.tasty-discover
-            ];
-          };
-        }) // { overlay = localOverlay; };
+      devShell = mkShell {
+        buildInputs = lib.attrValues self.packages.${system} ++ [
+          haskell.ghc
+          haskell.hls
+          gdb
+          # GHC depends on LANG so need this package to properly interpret our
+          # files with e.g. tasty-discover.
+          # https://www.reddit.com/r/Nix/comments/jyczts/nixshell_locale_issue/
+          glibcLocales
+          haskellPackages.cabal-install
+          haskellPackages.ormolu
+          haskellPackages.tasty-discover
+        ];
+      };
+    }));
 }

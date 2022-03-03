@@ -14,39 +14,39 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, cargo2nix, rust-overlay }:
+  outputs = { self, nixpkgs, flake-utils, cargo2nix, rust-overlay }: {
+    overlay = nixpkgs.lib.composeManyExtensions [
+      (import "${cargo2nix}/overlay") rust-overlay.overlay
+      (final: prev: {
+        hello-world =
+          let
+            rustPkgs = prev.rustBuilder.makePackageSet' {
+              rustChannel = "1.56.1";
+              packageFun = import ./Cargo.nix;
+            };
+          in
+            (rustPkgs.workspace.hello-world { }).bin;
+      })
+    ];
+  } // (flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgsForSystem = system: import nixpkgs {
+      pkgs = import nixpkgs {
         inherit system;
-        overlays = [
-          (import "${cargo2nix}/overlay") rust-overlay.overlay
-          localOverlay
+        overlays = [ self.overlay ];
+      };
+    in
+    with pkgs; {
+      packages = { inherit hello-world; };
+
+      defaultPackage = self.packages.${system}.hello-world;
+
+      devShell = mkShell {
+        buildInputs = lib.attrValues self.packages.${system} ++ [
+          cargo
+          rls
+          rustc
+          rustfmt
         ];
       };
-
-      localOverlay = final: prev:
-        let
-          rustPkgs = prev.rustBuilder.makePackageSet' {
-            rustChannel = "1.56.1";
-            packageFun = import ./Cargo.nix;
-          };
-        in {
-          hello-world = (rustPkgs.workspace.hello-world { }).bin;
-        };
-    in
-    flake-utils.lib.eachDefaultSystem
-      (system: with (pkgsForSystem system); {
-        packages = { inherit hello-world; };
-
-        defaultPackage = self.packages.${system}.hello-world;
-
-        devShell = mkShell {
-          buildInputs = lib.attrValues self.packages.${system} ++ [
-            cargo
-            rls
-            rustc
-            rustfmt
-          ];
-        };
-      }) // { overlay = localOverlay; };
+    }));
 }

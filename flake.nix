@@ -19,6 +19,10 @@
         path = ./maven;
         description = "A minimal Maven flake";
       };
+      postgresql = {
+        path = ./postgresql;
+        description = "A minimal PostgreSQL flake";
+      };
       python = {
         path = ./python;
         description = "A minimal Python flake";

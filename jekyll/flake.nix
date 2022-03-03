@@ -20,13 +20,6 @@
           gemdir = self;
         };
       in with pkgs; {
-        # packages.jekyll-serve = writeShellScriptBin "jekyll" ''
-        #   #!/usr/bin/env bash -e
-        #   ${gems}/bin/jekyll serve --watch
-        # '';
-
-        # defaultPackage = self.packages.${system}.jekyll;
-
         devShell = mkShell {
           buildInputs = [
             bundix

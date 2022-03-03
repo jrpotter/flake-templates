@@ -19,6 +19,10 @@
         path = ./maven;
         description = "A minimal Maven flake";
       };
+      python = {
+        path = ./python;
+        description = "A minimal Python flake";
+      };
       rust = {
         path = ./rust;
         description = "A minimal Rust flake";

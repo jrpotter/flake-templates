@@ -1,6 +1,20 @@
 # flake-templates
 
 A collection of opinionated Nix flake templates to be used in new projects.
+The `main` branch holds the collection of templates to be used by `nix-gen`. The
+other branches, named after each template, contain just the template itself.
+This way, if one of the templates exposes a command you want to include in
+another flake, you can update the input to instead be e.g.
+
+```nix
+{
+  inputs = {
+    psql-template.url = "github:jrpotter/flake-templates/postgresql";
+  };
+
+  # ...
+}
+```
 
 ## Usage
 
@@ -28,40 +42,29 @@ nix flake init -t github:jrpotter/flake-templates#<template>
 direnv allow
 ```
 
-where `<template>` is the name of the template you want to copy. Alternatively,
-copy the following into something like `.bashrc` for less error-prone
-generating:
+## Installation
+
+Alternatively, this repository exposes a `nix-gen` command that can perform the
+above commands in one fell swoop:
 
 ```bash
-function nix-gen() (
-  set -e
-  local TEMPLATE=$1
-  local DIR_NAME=$2
-  if [ -z "$TEMPLATE" ] || [ -z "$DIR_NAME" ]; then
-    >&2 echo 'Expected `nix-gen $TEMPLATE $DIR_NAME`.'
-    return 1
-  fi
-  if ! command -v nix &> /dev/null; then
-    >&2 echo 'Must have `nix` installed to pull template.'
-    return 1
-  fi
-  if ! command -v git &> /dev/null; then
-    >&2 echo 'Flake functionality does not work without `git`.'
-    return 1
-  fi
-  # Intentionally fail if the directory already exists. We delete the directory
-  # if our subshell fails.
-  mkdir $DIR_NAME
-  (
-    cd $DIR_NAME
-    trap "cd .. && rm -rf $DIR_NAME" ERR
-    nix flake init -t github:jrpotter/flake-templates#${TEMPLATE}
-    git init
-    git add .
-    git commit -m "Initial commit"
-  )
-  if command -v direnv &> /dev/null; then
-    direnv allow $DIR_NAME
-  fi
-)
+nix-gen haskell new-project
+```
+
+Import the above via [home-manager](https://github.com/nix-community/home-manager):
+
+```nix
+{
+  inputs = {
+    nix-gen.url = "github:jrpotter/flake-templates/main";
+  };
+
+  # ...
+
+  configuration = { ... }: {
+    home.packages = [
+      nix-gen.defaultPackage.${system}
+    ];
+  };
+}
 ```

@@ -1,0 +1,35 @@
+# direnv
+*.sw?
+.direnv
+.gopath
+/direnv
+/direnv.test
+/dist
+/test/config
+/test/data
+/test/scenarios/inherited/.envrc
+
+# postgresql
+db/
+
+# elixir
+/_build
+/cover
+/deps
+/doc
+/.fetch
+/tmp/
+erl_crash.dump
+*.ez
+*.beam
+/config/*.secret.exs
+.elixir_ls/
+# Ignore package tarball (built via "mix hex.build").
+hello_world-*.tar
+
+# phoenix
+npm-debug.log
+/assets/node_modules/
+# Since we are building assets from assets/, we ignore priv/static. You may want
+# to comment this depending on your deployment strategy.
+/priv/static/

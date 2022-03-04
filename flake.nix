@@ -61,6 +61,10 @@
         path = ./maven;
         description = "A minimal Maven flake";
       };
+      phoenix = {
+        path = ./phoenix;
+        description = "A minimal Phoenix flake";
+      };
       postgresql = {
         path = ./postgresql;
         description = "A minimal PostgreSQL flake";

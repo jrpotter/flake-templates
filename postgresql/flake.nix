@@ -107,23 +107,26 @@
           fi
         '';
 
-        createdb = prev.writeShellScriptBin "createdb" ''
+        pg_wrap = name: prev.writeShellScriptBin name ''
           #!/usr/bin/env bash -e
           ${set_environment}
-          ${prev.postgresql}/bin/createdb -h "$DB_DIR" "$@"
+          ${prev.postgresql}/bin/${name} -h "$DB_DIR" "$@"
         '';
 
-        createuser = prev.writeShellScriptBin "createuser" ''
-          #!/usr/bin/env bash -e
-          ${set_environment}
-          ${prev.postgresql}/bin/createuser -h "$DB_DIR" "$@"
-        '';
+        createdb = pg_wrap "createdb";
+        createuser = pg_wrap "createuser";
+        psql = pg_wrap "psql";
       in
       {
         postgresql = prev.symlinkJoin {
           name = "postgresql";
-          paths = [ pg_ctl createdb createuser prev.postgresql ];
-          buildInputs = [ prev.makeWrapper ];
+          paths = [
+            createdb
+            createuser
+            pg_ctl
+            psql
+            prev.postgresql
+          ];
         };
       };
   } // (flake-utils.lib.eachDefaultSystem (system:

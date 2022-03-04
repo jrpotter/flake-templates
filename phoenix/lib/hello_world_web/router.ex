@@ -17,7 +17,8 @@ defmodule HelloWorldWeb.Router do
   scope "/", HelloWorldWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    get "/", PageController, :index
+    live "/live", PageLive, :index
   end
 
   # Other scopes may use custom stacks.

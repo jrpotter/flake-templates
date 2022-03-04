@@ -77,8 +77,8 @@
       },
       "original": {
         "owner": "jrpotter",
+        "ref": "postgresql",
         "repo": "flake-templates",
-        "rev": "60f96614df3b7e0957496201edff23439966f257",
         "type": "github"
       }
     },

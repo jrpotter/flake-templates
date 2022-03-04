@@ -80,8 +80,8 @@
             echo "if you have not done so before. Try running:"
             echo
             tput setaf 3
-            echo "createuser -h .direnv/db/$DB_NAME postgres --superuser"
-            echo "createdb -h .direnv/db/$DB_NAME $DB_NAME"
+            echo 'createuser -h $PWD/.direnv/db/$DB_NAME postgres --superuser'
+            echo 'createdb -h $PWD/.direnv/db/$DB_NAME $DB_NAME'
             tput sgr0
             echo
             echo "at the project root directory."

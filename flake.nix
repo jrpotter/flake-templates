@@ -43,6 +43,7 @@
       devShell = mkShell {
         buildInputs = lib.attrValues self.packages.${system} ++ [
           cargo
+          cargo2nix.packages.${system}.cargo2nix
           rls
           rustc
           rustfmt

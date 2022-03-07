@@ -77,6 +77,10 @@
         path = ./rust;
         description = "A minimal Rust flake";
       };
+      typescript = {
+        path = ./typescript;
+        description = "A minimal Typescript flake";
+      };
     };
   } // (flake-utils.lib.eachDefaultSystem (system:
     let

@@ -1,5 +1,5 @@
 {
-  description = "A minimal typescript flake";
+  description = "A minimal Typescript flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";

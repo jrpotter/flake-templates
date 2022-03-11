@@ -36,7 +36,8 @@ common hello-world-common
                       EmptyDataDeriving,
                       ExistentialQuantification,
                       ExplicitForAll,
-                      FieldSelectors,
+                      -- Enabled by default, but not supported by ghc-8.10.
+                      -- FieldSelectors,
                       FlexibleContexts,
                       FlexibleInstances,
                       ForeignFunctionInterface,

@@ -2,7 +2,7 @@
   name:               hello-world
   version:            0.1.0.0
 
-  synopsis:           The Corner programming language.
+  synopsis:           Hello world package.
   -- A longer description of the package.
   -- description:
 

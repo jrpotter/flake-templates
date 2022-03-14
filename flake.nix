@@ -38,6 +38,9 @@
           git init
           git add .
           git commit -m "Initial commit"
+          if [ -x ".githooks/pre-commit" ]; then
+            git config --local core.hooksPath .githooks/
+          fi
         )
         if command -v direnv &> /dev/null; then
           direnv allow $DIR_NAME

@@ -20,6 +20,18 @@
         set -e
         TEMPLATE=$1
         DIR_NAME=$2
+
+        # It is generally recommended the `nix` command is replaced with one
+        # that is endowed with the flake subcommand or a separate `nixFlakes`
+        # command is made available.
+        if [ -z "$NIX_COMMAND" ]; then
+          if command -v nixFlakes &> /dev/null; then
+            NIX_COMMAND="nixFlakes"
+          else
+            NIX_COMMAND="nix"
+          fi
+        fi
+
         if [ -z "$TEMPLATE" ] || [ -z "$DIR_NAME" ]; then
           >&2 echo 'Expected `nix-gen $TEMPLATE $DIR_NAME`.'
           exit 1
@@ -38,7 +50,7 @@
         (
           cd $DIR_NAME
           trap "cd .. && rm -rf $DIR_NAME" ERR
-          nix flake init -t github:jrpotter/flake-templates#$TEMPLATE
+          $NIX_COMMAND flake init -t github:jrpotter/flake-templates#$TEMPLATE
           git init
           git add .
           git commit -m "Initial commit"

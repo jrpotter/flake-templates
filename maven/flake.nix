@@ -51,7 +51,7 @@
       defaultPackage = self.packages.${system}.hello-world;
 
       devShell = mkShell {
-        buildInputs = lib.attrValues self.packages.${system} ++ [
+        buildInputs = [
           google-java-format
           groovy
           maven

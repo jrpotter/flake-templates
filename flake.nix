@@ -41,7 +41,7 @@
       defaultPackage = self.packages.${system}.hello-world;
 
       devShell = mkShell {
-        buildInputs = lib.attrValues self.packages.${system} ++ [
+        buildInputs = [
           cargo
           cargo2nix.packages.${system}.cargo2nix
           rls

@@ -2,7 +2,6 @@
   description = "Opinionated flake templates";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -11,9 +10,10 @@
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
   };
 
-  outputs = { self, nixpkgs, flake-compat, flake-utils }: {
+  outputs = { self, flake-compat, flake-utils, nixpkgs }: {
     overlay = final: prev: {
       nix-gen = prev.writeShellScriptBin "nix-gen" ''
         #!/usr/bin/env bash -e

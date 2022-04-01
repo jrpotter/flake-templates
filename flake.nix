@@ -2,14 +2,18 @@
   description = "A minimal Maven flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
   };
 
-  outputs = { self, nixpkgs, flake-utils }: {
+  outputs = { self, flake-compat, flake-utils, nixpkgs }: {
     overlay = final: prev:
       let
         # We package our entire repository as a fixed output derivation for

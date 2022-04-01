@@ -2,15 +2,19 @@
   description = "A minimal Phoenix flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
     postgresql-template.url = "github:jrpotter/flake-templates/postgresql";
   };
 
-  outputs = { self, nixpkgs, flake-utils, postgresql-template }:
+  outputs = { self, flake-compat, flake-utils, nixpkgs, postgresql-template }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };

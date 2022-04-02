@@ -19,8 +19,14 @@
     in
     {
       overlay = final: prev: {
-        haskellPackages = prev.haskellPackages.extend (_self: _super: {
-          "${name}" = prev.haskellPackages.callCabal2nix name self { };
+        # Overriding pattern according to https://github.com/NixOS/nixpkgs/issues/26561.
+        haskellPackages = prev.haskellPackages.override (old: {
+          overrides = prev.lib.composeExtensions
+            (old.overrides or (_: _: {}))
+            (_: _: {
+              # Use `final` so downstream overrides are supplied to this.
+              "${name}" = final.haskellPackages.callCabal2nix name self { };
+            });
         });
       };
     } // (flake-utils.lib.eachDefaultSystem (system:
